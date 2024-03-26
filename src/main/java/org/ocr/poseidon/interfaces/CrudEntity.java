@@ -1,4 +1,4 @@
-package org.ocr.poseidon.domain;
+package org.ocr.poseidon.interfaces;
 
 public interface CrudEntity<SELF> {
     Integer getId();

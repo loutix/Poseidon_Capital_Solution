@@ -1,4 +1,4 @@
-package org.ocr.poseidon.services;
+package org.ocr.poseidon.interfaces;
 
 import org.ocr.poseidon.domain.BidList;
 

@@ -1,54 +1,96 @@
 package org.ocr.poseidon.controllers;
 
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.ocr.poseidon.domain.BidList;
+import org.ocr.poseidon.dto.BidListCreateRequestDTO;
+import org.ocr.poseidon.dto.BidListUpdateRequestDTO;
+import org.ocr.poseidon.services.BidListServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-
-
+@Slf4j
 @Controller
 public class BidListController {
-    // TODO: Inject Bid service
+
+    private final BidListServiceImpl bidListService;
+
+    public BidListController(BidListServiceImpl bidListService) {
+        this.bidListService = bidListService;
+    }
+
 
     @RequestMapping("/bidList/list")
     public String home(Model model) {
-        // TODO: call service find all bids to show to the view
+        log.info("GET:  /bidList/list");
+
+        model.addAttribute("bidLists", bidListService.getAll());
         return "bidList/list";
     }
 
     @GetMapping("/bidList/add")
-    public String addBidForm(BidList bid) {
+    public String addBidForm(Model model) {
+        model.addAttribute("bidListCreateRequestDto", new BidListCreateRequestDTO());
+        log.info("GET:  /bidList/add");
+
         return "bidList/add";
     }
 
     @PostMapping("/bidList/validate")
-    public String validate(@Valid BidList bid, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return bid list
-        return "bidList/add";
+    public String validate(@Valid @ModelAttribute("bidListRequestDto") BidListCreateRequestDTO bidListCreateRequestDto, BindingResult result, Model model) {
+
+        log.info("POST:  /bidList/add");
+
+        if (result.hasErrors()) {
+            return "bidList/add";
+        }
+
+        BidList bidListConverted = bidListCreateRequestDto.convertToBidList();
+        bidListService.save(bidListConverted);
+
+        return "redirect:/bidList/list";
     }
 
     @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Bid by Id and to model then show to the form
+
+        log.info("GET:  /bidList/update/" + id);
+
+        BidList bidList = bidListService.getById(id);
+
+        BidListUpdateRequestDTO dto = new BidListUpdateRequestDTO(bidList);
+
+        model.addAttribute("bidList", dto);
+
         return "bidList/update";
     }
 
     @PostMapping("/bidList/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
+    public String updateBid(@PathVariable("id") Integer id, @Valid @ModelAttribute("bidList") BidListUpdateRequestDTO bidListUpdateRequestDTO,
                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Bid and return list Bid
+
+        log.info("POST:  /bidList/update/" + id);
+
+        if (result.hasErrors()) {
+            model.addAttribute("id", id);
+            return "bidList/update";
+        }
+
+        BidList bidListConverted = bidListUpdateRequestDTO.convertToBidList();
+
+        bidListService.update(bidListConverted);
+
         return "redirect:/bidList/list";
     }
 
     @GetMapping("/bidList/delete/{id}")
-    public String deleteBid(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Bid by Id and delete the bid, return to Bid list
+    public String deleteBid(@PathVariable("id") Integer id) {
+
+        log.info("DELETE:  /bidList/delete" + id);
+
+        bidListService.delete(id);
         return "redirect:/bidList/list";
     }
 }
