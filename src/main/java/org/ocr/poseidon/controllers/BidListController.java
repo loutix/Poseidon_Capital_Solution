@@ -39,7 +39,7 @@ public class BidListController {
     }
 
     @PostMapping("/bidList/validate")
-    public String validate(@Valid @ModelAttribute("bidListRequestDto") BidListCreateRequestDTO bidListCreateRequestDto, BindingResult result, Model model) {
+    public String validate(@Valid @ModelAttribute("bidListRequestDto") BidListCreateRequestDTO bidListCreateRequestDto, BindingResult result) {
 
         log.info("POST:  /bidList/add");
 
