@@ -1,54 +1,97 @@
 package org.ocr.poseidon.controllers;
 
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.ocr.poseidon.domain.BidList;
 import org.ocr.poseidon.domain.Rating;
+import org.ocr.poseidon.dto.BidListUpdateRequestDTO;
+import org.ocr.poseidon.dto.RatingUpdateRequestDTO;
+import org.ocr.poseidon.dto.RatingCreateRequestDTO;
+import org.ocr.poseidon.services.RatingServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import jakarta.validation.Valid;
-
+import org.springframework.web.bind.annotation.*;
+@Slf4j
 @Controller
 public class RatingController {
-    // TODO: Inject Rating service
+
+
+    private final RatingServiceImpl ratingService;
+
+    public RatingController(RatingServiceImpl ratingService) {
+        this.ratingService = ratingService;
+    }
+
 
     @RequestMapping("/rating/list")
-    public String home(Model model)
-    {
-        // TODO: find all Rating, add to model
+    public String home(Model model) {
+
+        model.addAttribute("ratings", ratingService.getAll());
         return "rating/list";
     }
 
     @GetMapping("/rating/add")
-    public String addRatingForm(Rating rating) {
+    public String addRatingForm(Model model) {
+        log.info("GET:  /rating/add");
+        model.addAttribute("ratingCreateRequestDTO", new RatingCreateRequestDTO());
+
         return "rating/add";
     }
 
     @PostMapping("/rating/validate")
-    public String validate(@Valid Rating rating, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Rating list
-        return "rating/add";
+    public String validate(@Valid @ModelAttribute("ratingCreateRequestDTO") RatingCreateRequestDTO ratingCreateRequestDTO, BindingResult result, Model model) {
+        log.info("POST:  /rating/validate");
+
+        if (result.hasErrors()) {
+            return "rating/add";
+        }
+
+        Rating ratingConverted = ratingCreateRequestDTO.convertToRating();
+        ratingService.save(ratingConverted);
+
+        return "redirect:/rating/list";
     }
 
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Rating by Id and to model then show to the form
+
+        log.info("GET:  /rating/update/" + id);
+
+        Rating rating = ratingService.getById(id);
+
+        RatingUpdateRequestDTO dto = new RatingUpdateRequestDTO(rating);
+
+        model.addAttribute("ratingList", dto);
+
+
         return "rating/update";
     }
 
     @PostMapping("/rating/update/{id}")
-    public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
+    public String updateRating(@PathVariable("id") Integer id, @Valid @ModelAttribute("ratingList") RatingUpdateRequestDTO ratingUpdateRequestDTO,
                              BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Rating and return Rating list
+
+        log.info("POST:  /rating/update/" + id);
+
+        if (result.hasErrors()) {
+            model.addAttribute("id", id);
+            return "rating/update";
+        }
+
+        Rating ratingConverted = ratingUpdateRequestDTO.convertToRating();
+
+        ratingService.update(ratingConverted);
+
+
         return "redirect:/rating/list";
     }
 
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Rating by Id and delete the Rating, return to Rating list
+        log.info("DELETE:  /rating/delete" + id);
+
+        ratingService.delete(id);
         return "redirect:/rating/list";
     }
 }

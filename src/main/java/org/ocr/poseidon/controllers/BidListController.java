@@ -32,8 +32,8 @@ public class BidListController {
 
     @GetMapping("/bidList/add")
     public String addBidForm(Model model) {
-        model.addAttribute("bidListCreateRequestDto", new BidListCreateRequestDTO());
         log.info("GET:  /bidList/add");
+        model.addAttribute("bidListCreateRequestDto", new BidListCreateRequestDTO());
 
         return "bidList/add";
     }
@@ -41,7 +41,7 @@ public class BidListController {
     @PostMapping("/bidList/validate")
     public String validate(@Valid @ModelAttribute("bidListRequestDto") BidListCreateRequestDTO bidListCreateRequestDto, BindingResult result) {
 
-        log.info("POST:  /bidList/add");
+        log.info("POST:  /bidList/validate");
 
         if (result.hasErrors()) {
             return "bidList/add";
