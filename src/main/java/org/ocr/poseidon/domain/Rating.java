@@ -16,13 +16,13 @@ public class Rating implements CrudEntity<Rating> {
     @Column(name = "moodys_rating")
     private String moodysRating;
 
-    @Column(name = "sand_PRating")
+    @Column(name = "sand_p_rating")
     private String sandPRating;
 
-    @Column(name = "fitch_Rating")
+    @Column(name = "fitch_rating")
     private String fitchRating;
 
-    @Column(name = "order_Number")
+    @Column(name = "order_number")
     private Integer orderNumber;
 
     @Override

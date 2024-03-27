@@ -9,5 +9,22 @@ public class RuleName {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private int id;
-    // TODO: Map columns in data table RULENAME with corresponding java fields
+
+    @Column(name = "name", length = 125)
+    private String name;
+
+    @Column(name = "description", length = 125)
+    private String description;
+
+    @Column(name = "json", length = 125)
+    private String json;
+
+    @Column(name = "template", length = 512)
+    private String template;
+
+    @Column(name = "sql_str", length = 125)
+    private String sqlStr;
+
+    @Column(name = "sql_part", length = 125)
+    private String sqlPart;
 }

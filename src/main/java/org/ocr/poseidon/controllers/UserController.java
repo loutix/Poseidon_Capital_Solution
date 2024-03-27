@@ -1,5 +1,6 @@
 package org.ocr.poseidon.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.ocr.poseidon.domain.User;
 import org.ocr.poseidon.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
 
+@Slf4j
 @Controller
 public class UserController {
     @Autowired
     private UserRepository userRepository;
+
+    @GetMapping("/login")
+    public String login() {
+        log.info("GET/login ");
+        return "registration/login";
+    }
 
     @RequestMapping("/user/list")
     public String home(Model model)

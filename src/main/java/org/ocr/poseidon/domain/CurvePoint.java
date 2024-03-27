@@ -19,7 +19,7 @@ public class CurvePoint implements CrudEntity<CurvePoint> {
     @Column(name = "curve_id")
     private Integer curveId;
 
-    @Column(name = "as_ff_date")
+    @Column(name = "as_of_date")
     private LocalDateTime asOfDate;
 
     @Column(name = "term")
