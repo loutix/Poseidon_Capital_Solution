@@ -17,16 +17,7 @@ public abstract class AbstractCrudService<E extends CrudEntity<E>> implements Cr
     }
 
 
-    /**
-     * This method is an abstraction to update an entity
-     *
-     * @param entity the entity to update
-     * @since v1.25
-     * @author moi
-     *
-     */
-    @Override
-    public abstract void update(E entity);
+
 
 
     @Override
@@ -59,5 +50,29 @@ public abstract class AbstractCrudService<E extends CrudEntity<E>> implements Cr
         } else {
             throw new ItemNotFoundException("Item id n°" + id + "is not found");
         }
+    }
+
+
+    /**
+     * This method is an abstraction to update an entity
+     *
+     * @param entity the entity to update
+     * @author moi
+     * @since v1.25
+     */
+    @Override
+    public void update(E entity) {
+
+        Integer id = entity.getId();
+
+        if (!repository.existsById(id)) {
+            throw new ItemNotFoundException(STR."Item id n°\{id}is not found, controle entity: \{entity.toString()}"  );
+        }
+
+        var updatedEntity = repository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException(STR."Item id n°\{id}is not found"))
+                .update(entity);
+
+        repository.save(updatedEntity);
     }
 }
