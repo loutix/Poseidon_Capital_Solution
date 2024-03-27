@@ -27,7 +27,11 @@ public class Rating implements CrudEntity<Rating> {
 
     @Override
     public Rating update(Rating entity) {
-        return null;
+        this.setMoodysRating(entity.getMoodysRating());
+        this.setSandPRating(entity.getSandPRating());
+        this.setFitchRating(entity.getFitchRating());
+        this.setOrderNumber(entity.getOrderNumber());
+        return this;
     }
 
     public Integer getId() {

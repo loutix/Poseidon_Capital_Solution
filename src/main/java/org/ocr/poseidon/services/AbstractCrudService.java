@@ -17,6 +17,14 @@ public abstract class AbstractCrudService<E extends CrudEntity<E>> implements Cr
     }
 
 
+    /**
+     * This method is an abstraction to update an entity
+     *
+     * @param entity the entity to update
+     * @since v1.25
+     * @author moi
+     *
+     */
     @Override
     public abstract void update(E entity);
 

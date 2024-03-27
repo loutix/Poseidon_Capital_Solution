@@ -59,23 +59,20 @@ public class RatingController {
         log.info("GET:  /rating/update/" + id);
 
         Rating rating = ratingService.getById(id);
-
         RatingUpdateRequestDTO dto = new RatingUpdateRequestDTO(rating);
 
         model.addAttribute("ratingList", dto);
-
 
         return "rating/update";
     }
 
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable("id") Integer id, @Valid @ModelAttribute("ratingList") RatingUpdateRequestDTO ratingUpdateRequestDTO,
-                             BindingResult result, Model model) {
+                             BindingResult result) {
 
         log.info("POST:  /rating/update/" + id);
 
         if (result.hasErrors()) {
-            model.addAttribute("id", id);
             return "rating/update";
         }
 

@@ -39,6 +39,7 @@ public class RatingUpdateRequestDTO {
 
     public Rating convertToRating() {
         Rating rating = new Rating();
+        rating.setId(this.id);
         rating.setMoodysRating(this.moodysRating);
         rating.setSandPRating(this.sandPRating);
         rating.setFitchRating(this.fitchRating);
