@@ -1,54 +1,87 @@
 package org.ocr.poseidon.controllers;
 
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.ocr.poseidon.domain.RuleName;
+import org.ocr.poseidon.dto.RuleCreateDTO;
+import org.ocr.poseidon.dto.RuleUpdateDTO;
+import org.ocr.poseidon.services.RuleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-
+@Slf4j
 @Controller
 public class RuleNameController {
-    // TODO: Inject RuleName service
+    private final RuleService ruleService;
+
+    public RuleNameController(RuleService ruleService) {
+        this.ruleService = ruleService;
+    }
+
 
     @RequestMapping("/ruleName/list")
-    public String home(Model model)
-    {
-        // TODO: find all RuleName, add to model
+    public String home(Model model) {
+        log.info("GET:  /ruleName/list");
+        model.addAttribute("ruleNames", ruleService.getAll());
         return "ruleName/list";
     }
 
     @GetMapping("/ruleName/add")
-    public String addRuleForm(RuleName bid) {
+    public String addRuleForm(Model model) {
+        log.info("GET:  /ruleName/add");
+        model.addAttribute("ruleCreateDTO", new RuleCreateDTO());
+
         return "ruleName/add";
     }
 
     @PostMapping("/ruleName/validate")
-    public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return RuleName list
-        return "ruleName/add";
+    public String validate(@Valid @ModelAttribute("ruleCreateDTO") RuleCreateDTO ruleCreateDTO, BindingResult result) {
+        log.info("GET:  /ruleName/validate");
+        if (result.hasErrors()) {
+            return "ruleName/add";
+        }
+
+        RuleName ruleNameConverted = ruleCreateDTO.convertToRuleName();
+        ruleService.save(ruleNameConverted);
+
+        return "redirect:/ruleName/list";
     }
 
     @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get RuleName by Id and to model then show to the form
+
+        RuleName ruleName = ruleService.getById(id);
+
+        model.addAttribute("ruleUpdateDTO", new RuleUpdateDTO(ruleName));
+
         return "ruleName/update";
     }
 
     @PostMapping("/ruleName/update/{id}")
-    public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
-                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update RuleName and return RuleName list
+    public String updateRuleName(@PathVariable("id") Integer id, @Valid @ModelAttribute("ruleUpdateDTO") RuleUpdateDTO ruleUpdateDTO,
+                                 BindingResult result) {
+
+        log.info("POST:  /ruleName/update/{id}" + id);
+
+        if (result.hasErrors()) {
+            return "ruleName/update";
+        }
+
+        RuleName ruleNameConverted = ruleUpdateDTO.convertToRuleName();
+
+        ruleService.update(ruleNameConverted);
+
         return "redirect:/ruleName/list";
     }
 
     @GetMapping("/ruleName/delete/{id}")
-    public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find RuleName by Id and delete the RuleName, return to Rule list
+    public String deleteRuleName(@PathVariable("id") Integer id) {
+        log.info("GET:  /ruleName/delete/{id}" + id);
+
+        ruleService.delete(id);
+
         return "redirect:/ruleName/list";
     }
 }

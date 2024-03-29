@@ -32,7 +32,6 @@ public class TradeUpdateDTO {
         this.buyQuantity = trade.getBuyQuantity();
     }
 
-
     public Trade convertToTrade() {
         Trade trade = new Trade();
         trade.setTradeId(this.id);
