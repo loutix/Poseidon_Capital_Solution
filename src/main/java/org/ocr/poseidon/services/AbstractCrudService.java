@@ -17,9 +17,6 @@ public abstract class AbstractCrudService<E extends CrudEntity<E>> implements Cr
     }
 
 
-
-
-
     @Override
     public E getById(Integer id) {
         return repository.findById(id)
@@ -40,7 +37,6 @@ public abstract class AbstractCrudService<E extends CrudEntity<E>> implements Cr
     }
 
 
-    //todo factoriser le findById
     @Override
     public void delete(Integer id) {
 
@@ -66,7 +62,7 @@ public abstract class AbstractCrudService<E extends CrudEntity<E>> implements Cr
         Integer id = entity.getId();
 
         if (!repository.existsById(id)) {
-            throw new ItemNotFoundException(STR."Item id n°\{id}is not found, controle entity: \{entity.toString()}"  );
+            throw new ItemNotFoundException(STR."Item id n°\{id}is not found, controle entity: \{entity.toString()}");
         }
 
         var updatedEntity = repository.findById(id)
@@ -75,4 +71,5 @@ public abstract class AbstractCrudService<E extends CrudEntity<E>> implements Cr
 
         repository.save(updatedEntity);
     }
+
 }

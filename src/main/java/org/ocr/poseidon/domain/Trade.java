@@ -2,13 +2,14 @@ package org.ocr.poseidon.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.ocr.poseidon.interfaces.CrudEntity;
 
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "trade")
-public class Trade {
+public class Trade implements CrudEntity<Trade> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "trade_id")
@@ -74,4 +75,16 @@ public class Trade {
     @Column(name = "side", length = 125)
     private String side;
 
+    @Override
+    public Integer getId() {
+        return TradeId;
+    }
+
+    @Override
+    public Trade update(Trade entity) {
+        account = entity.getAccount();
+        type = entity.getType();
+        buyQuantity = entity.getBuyQuantity();
+        return this;
+    }
 }

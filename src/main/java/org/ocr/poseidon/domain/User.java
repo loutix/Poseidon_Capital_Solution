@@ -2,13 +2,16 @@ package org.ocr.poseidon.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import org.ocr.poseidon.interfaces.CrudEntity;
 
 @Data
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements CrudEntity<User> {
+    @Getter
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer id;
 
@@ -23,5 +26,14 @@ public class User {
 
     @Column(name = "role", nullable = false)
     private String role;
+
+    @Override
+    public User update(User user) {
+        username = user.getUsername();
+        fullname = user.getFullname();
+        role = String.valueOf(user.getRole());
+        password = user.getPassword();
+        return this;
+    }
 
 }
