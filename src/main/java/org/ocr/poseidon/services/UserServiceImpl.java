@@ -44,14 +44,17 @@ public class UserServiceImpl extends AbstractCrudService<User> {
         Integer id = user.getId();
 
         if (!repository.existsById(id)) {
-            throw new ItemNotFoundException(STR."Item id n°\{id}is not found, controle entity: \{user.toString()}");
+            throw new ItemNotFoundException("User with ID " + id + " not found");
         }
 
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new ValidationException("There is already an account registered with the same unsername" + user.getUsername());
+        User userUpdated = userRepository.findById(id).orElseThrow();
+        String newUsername = user.getUsername();
+        if (!userUpdated.getUsername().equalsIgnoreCase(newUsername) && userRepository.existsByUsername(user.getUsername())) {
+            throw new ValidationException("Username " + newUsername + " is already in use");
         }
 
         user.setPassword(passwordEncrypt.createPassword(user.getPassword()));
+
         return user;
     }
 }

@@ -15,7 +15,5 @@ public class PasswordEncrypt {
         return passwordEncoder.encode(s);
     }
 
-
-
 }
 

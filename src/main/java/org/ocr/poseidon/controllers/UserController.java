@@ -1,6 +1,7 @@
 package org.ocr.poseidon.controllers;
 
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.ocr.poseidon.domain.User;
 import org.ocr.poseidon.dto.UserCreationDTO;
@@ -43,14 +44,19 @@ public class UserController {
     }
 
     @PostMapping("/user/validate")
-    public String validate(@Valid @ModelAttribute("userCreationDto") UserCreationDTO userCreationDTO, BindingResult result) {
+    public String validate(@Valid @ModelAttribute("userCreationDto") UserCreationDTO userCreationDTO, BindingResult result, Model model) {
         log.info("POST:  /user/validate/");
 
         if (result.hasErrors()) {
             return "user/add";
         }
 
-        userService.saveUser(userCreationDTO);
+        try {
+            userService.saveUser(userCreationDTO);
+        } catch (ValidationException e) {
+            model.addAttribute("usernameNotUnique", true);
+            return "user/add";
+        }
 
         return "redirect:/user/list";
     }
@@ -69,17 +75,21 @@ public class UserController {
 
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable("id") Integer id, @Valid @ModelAttribute("userUpdateDTO") UserUpdateDTO userUpdateDTO,
-                             BindingResult result) {
+                             BindingResult result, Model model) {
 
         if (result.hasErrors()) {
             return "user/update";
         }
 
         User userConverted = userUpdateDTO.convertToUser();
-        User user = userService.controlUser(userConverted);
 
-        userService.update(user);
-
+        try {
+            User user = userService.controlUser(userConverted);
+            userService.update(user);
+        } catch (ValidationException e) {
+            model.addAttribute("usernameNotUnique", true);
+            return "user/update";
+        }
 
         return "redirect:/user/list";
     }

@@ -6,6 +6,7 @@ import org.ocr.poseidon.domain.BidList;
 import org.ocr.poseidon.dto.BidListCreateRequestDTO;
 import org.ocr.poseidon.dto.BidListUpdateRequestDTO;
 import org.ocr.poseidon.services.BidListServiceImpl;
+import org.ocr.poseidon.util.AuthUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,14 +18,21 @@ public class BidListController {
 
     private final BidListServiceImpl bidListService;
 
-    public BidListController(BidListServiceImpl bidListService) {
+    private final AuthUtils authUtils;
+
+    public BidListController(BidListServiceImpl bidListService, AuthUtils authUtils) {
         this.bidListService = bidListService;
+        this.authUtils = authUtils;
     }
 
 
     @RequestMapping("/bidList/list")
     public String home(Model model) {
         log.info("GET:  /bidList/list");
+
+       if (authUtils.isAdmin()){
+           model.addAttribute("isAdmin", true);
+       }
 
         model.addAttribute("bidLists", bidListService.getAll());
         return "bidList/list";

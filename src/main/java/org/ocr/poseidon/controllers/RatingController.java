@@ -2,31 +2,36 @@ package org.ocr.poseidon.controllers;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.ocr.poseidon.domain.BidList;
 import org.ocr.poseidon.domain.Rating;
-import org.ocr.poseidon.dto.BidListUpdateRequestDTO;
-import org.ocr.poseidon.dto.RatingUpdateRequestDTO;
 import org.ocr.poseidon.dto.RatingCreateRequestDTO;
+import org.ocr.poseidon.dto.RatingUpdateRequestDTO;
 import org.ocr.poseidon.services.RatingServiceImpl;
+import org.ocr.poseidon.util.AuthUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 @Slf4j
 @Controller
 public class RatingController {
 
 
     private final RatingServiceImpl ratingService;
+    private final AuthUtils authUtils;
 
-    public RatingController(RatingServiceImpl ratingService) {
+    public RatingController(RatingServiceImpl ratingService, AuthUtils authUtils) {
         this.ratingService = ratingService;
+        this.authUtils = authUtils;
     }
 
 
     @RequestMapping("/rating/list")
     public String home(Model model) {
 
+        if (authUtils.isAdmin()) {
+            model.addAttribute("isAdmin", true);
+        }
         model.addAttribute("ratings", ratingService.getAll());
         return "rating/list";
     }
@@ -40,7 +45,7 @@ public class RatingController {
     }
 
     @PostMapping("/rating/validate")
-    public String validate(@Valid @ModelAttribute("ratingCreateRequestDTO") RatingCreateRequestDTO ratingCreateRequestDTO, BindingResult result, Model model) {
+    public String validate(@Valid @ModelAttribute("ratingCreateRequestDTO") RatingCreateRequestDTO ratingCreateRequestDTO, BindingResult result) {
         log.info("POST:  /rating/validate");
 
         if (result.hasErrors()) {
@@ -68,7 +73,7 @@ public class RatingController {
 
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable("id") Integer id, @Valid @ModelAttribute("ratingList") RatingUpdateRequestDTO ratingUpdateRequestDTO,
-                             BindingResult result) {
+                               BindingResult result) {
 
         log.info("POST:  /rating/update/" + id);
 
@@ -85,7 +90,7 @@ public class RatingController {
     }
 
     @GetMapping("/rating/delete/{id}")
-    public String deleteRating(@PathVariable("id") Integer id, Model model) {
+    public String deleteRating(@PathVariable("id") Integer id) {
         log.info("DELETE:  /rating/delete" + id);
 
         ratingService.delete(id);

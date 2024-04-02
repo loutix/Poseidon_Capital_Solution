@@ -6,26 +6,33 @@ import org.ocr.poseidon.domain.CurvePoint;
 import org.ocr.poseidon.dto.CurverCreateRequestDTO;
 import org.ocr.poseidon.dto.CurverUpdateRequestDTO;
 import org.ocr.poseidon.services.CurvePointServiceImpl;
+import org.ocr.poseidon.util.AuthUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @Slf4j
 @Controller
 public class CurveController {
     private final CurvePointServiceImpl curvePointService;
+    private final AuthUtils authUtils;
 
-    public CurveController(CurvePointServiceImpl curvePointService) {
+    public CurveController(CurvePointServiceImpl curvePointService, AuthUtils authUtils) {
         this.curvePointService = curvePointService;
+        this.authUtils = authUtils;
     }
 
     @RequestMapping("/curvePoint/list")
     public String home(Model model) {
         log.info("GET:  /curvePoint/list");
+
+        if (authUtils.isAdmin()) {
+            model.addAttribute("isAdmin", true);
+        }
+
+
         model.addAttribute("curvePoints", curvePointService.getAll());
         return "curvePoint/list";
     }

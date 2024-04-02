@@ -6,6 +6,7 @@ import org.ocr.poseidon.domain.RuleName;
 import org.ocr.poseidon.dto.RuleCreateDTO;
 import org.ocr.poseidon.dto.RuleUpdateDTO;
 import org.ocr.poseidon.services.RuleService;
+import org.ocr.poseidon.util.AuthUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,15 +16,22 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class RuleNameController {
     private final RuleService ruleService;
+    private final AuthUtils authUtils;
 
-    public RuleNameController(RuleService ruleService) {
+    public RuleNameController(RuleService ruleService, AuthUtils authUtils) {
         this.ruleService = ruleService;
+        this.authUtils = authUtils;
     }
 
 
     @RequestMapping("/ruleName/list")
     public String home(Model model) {
         log.info("GET:  /ruleName/list");
+
+        if (authUtils.isAdmin()) {
+            model.addAttribute("isAdmin", true);
+        }
+
         model.addAttribute("ruleNames", ruleService.getAll());
         return "ruleName/list";
     }

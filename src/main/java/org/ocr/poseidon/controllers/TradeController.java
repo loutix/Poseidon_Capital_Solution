@@ -6,6 +6,7 @@ import org.ocr.poseidon.domain.Trade;
 import org.ocr.poseidon.dto.TradeCreationDTO;
 import org.ocr.poseidon.dto.TradeUpdateDTO;
 import org.ocr.poseidon.services.TradeServiceImpl;
+import org.ocr.poseidon.util.AuthUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,14 +16,21 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class TradeController {
     private final TradeServiceImpl tradeService;
+    private final AuthUtils authUtils;
 
-    public TradeController(TradeServiceImpl tradeService) {
+    public TradeController(TradeServiceImpl tradeService, AuthUtils authUtils) {
         this.tradeService = tradeService;
+        this.authUtils = authUtils;
     }
 
     @RequestMapping("/trade/list")
     public String home(Model model) {
         log.info("GET:  /trade/list");
+
+        if (authUtils.isAdmin()) {
+            model.addAttribute("isAdmin", true);
+        }
+
         model.addAttribute("trades", tradeService.getAll());
         return "trade/list";
     }
