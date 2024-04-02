@@ -25,7 +25,6 @@ public class BidListController {
         this.authUtils = authUtils;
     }
 
-
     @RequestMapping("/bidList/list")
     public String home(Model model) {
         log.info("GET:  /bidList/list");
