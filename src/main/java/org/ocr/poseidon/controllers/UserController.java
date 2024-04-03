@@ -22,6 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
+
     @GetMapping("/login")
     public String login() {
         log.info("GET/login");

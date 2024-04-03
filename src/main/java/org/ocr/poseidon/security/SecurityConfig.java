@@ -15,6 +15,12 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final OAuth2UserService oAuth2UserService;
+
+    public SecurityConfig(OAuth2UserService oAuth2UserService) {
+        this.oAuth2UserService = oAuth2UserService;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -32,7 +38,15 @@ public class SecurityConfig {
                                         .anyRequest()
                                         .authenticated()
                 )
-                .formLogin( form -> form
+
+                .oauth2Login(oauth -> oauth
+                        .loginPage("/login")
+//                        .loginProcessingUrl("/login")
+                                .userInfoEndpoint(info -> info.userService(oAuth2UserService) )
+                         .defaultSuccessUrl("/home", true)
+                        .permitAll()
+                )
+                .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/home", true)

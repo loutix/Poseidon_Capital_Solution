@@ -62,11 +62,11 @@ public abstract class AbstractCrudService<E extends CrudEntity<E>> implements Cr
         Integer id = entity.getId();
 
         if (!repository.existsById(id)) {
-            throw new ItemNotFoundException(STR."Item id n°\{id}is not found, controle entity: \{entity.toString()}");
+            throw new ItemNotFoundException("Item not found");
         }
 
         var updatedEntity = repository.findById(id)
-                .orElseThrow(() -> new ItemNotFoundException(STR."Item id n°\{id}is not found"))
+                .orElseThrow(() -> new ItemNotFoundException("Item not found"))
                 .update(entity);
 
         repository.save(updatedEntity);
