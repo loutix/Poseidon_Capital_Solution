@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -30,37 +29,32 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
 
-        log.info("Load user {}", oAuth2UserRequest);
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
-        return processOAuth2User(oAuth2UserRequest, oAuth2User);
-
+        return processOAuth2User(oAuth2User);
 
     }
 
-    private DefaultOAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
+    private DefaultOAuth2User processOAuth2User(OAuth2User oAuth2User) {
 
         String username = oAuth2User.getAttributes().get("login").toString();
+        String id = oAuth2User.getAttributes().get("id").toString();
 
-        Optional<User> existingUser = userRepository.findByUsername(username);
+        String username_id = username + id;
 
-        if (existingUser.isPresent()) {
-            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-            return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), "login");
+        boolean existingUser = userRepository.findByUsername(username + id).stream().anyMatch(user -> user.getSso().equals(true));
 
-        } else {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        if (!existingUser) {
             User newUserSSO = new User();
+            newUserSSO.setUsername(username_id);
             newUserSSO.setFullname(oAuth2User.getAttributes().get("login").toString());
-            newUserSSO.setUsername(oAuth2User.getAttributes().get("login").toString());
             newUserSSO.setRole(String.valueOf(UserRole.USER));
+            newUserSSO.setSso(true);
 
             userRepository.save(newUserSSO);
-
-            log.trace("new SSO user created" + newUserSSO);
-
-            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-            return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), "login");
         }
+        return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), "login");
     }
 }

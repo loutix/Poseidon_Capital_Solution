@@ -27,6 +27,9 @@ public class User implements CrudEntity<User> {
     @Column(name = "role", nullable = false)
     private String role;
 
+    @Column(name = "is_sso", nullable = false)
+    private Boolean sso;
+
     @Override
     public User update(User user) {
         username = user.getUsername();

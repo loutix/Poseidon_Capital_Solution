@@ -105,6 +105,7 @@ CREATE TABLE Users
     password VARCHAR(125),
     fullname VARCHAR(125),
     role     VARCHAR(125),
+    is_sso   boolean DEFAULT 0,
 
     PRIMARY KEY (Id)
 );
@@ -114,7 +115,7 @@ INSERT INTO users (fullname, password, role, username)
 VALUES ('John', '$2a$10$rgVyJt18/S/QFuDoL1oqoOOYPjLvyN2eLJDurWgOzeD/khrqLvjAK', 'USER', 'John'),
        ('Henry', '$2a$10$rgVyJt18/S/QFuDoL1oqoOOYPjLvyN2eLJDurWgOzeD/khrqLvjAK', 'USER', 'Henry'),
        ('Amelie', '$2a$10$rgVyJt18/S/QFuDoL1oqoOOYPjLvyN2eLJDurWgOzeD/khrqLvjAK', 'USER', 'Amelie'),
-       ('Loïc', '$2a$10$rgVyJt18/S/QFuDoL1oqoOOYPjLvyN2eLJDurWgOzeD/khrqLvjAK', 'ADMIN', 'Loïc');
+       ('Loïc', '$2a$10$rgVyJt18/S/QFuDoL1oqoOOYPjLvyN2eLJDurWgOzeD/khrqLvjAK', 'ADMIN', 'loutix');
 
 #
 # insert into Users(fullname, username, password, role) values("Administrator", "admin", "$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa", "ADMIN")
