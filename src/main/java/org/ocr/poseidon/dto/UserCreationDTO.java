@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.ocr.poseidon.domain.User;
 import org.ocr.poseidon.enums.UserRole;
 
 @Data
@@ -30,14 +29,5 @@ public class UserCreationDTO {
     @NotNull
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
-
-    public User convertToUser() {
-        User user = new User();
-        user.setUsername(this.username);
-        user.setPassword(this.password);
-        user.setFullname(this.fullname);
-        user.setRole(String.valueOf(this.role));
-        return user;
-    }
-
 }
+
