@@ -28,23 +28,24 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorize ->
                                 authorize
-                                        .requestMatchers("/login").anonymous()
                                         .requestMatchers("/user/**").hasRole("ADMIN")
                                         .requestMatchers(
                                                 "/css/**",
                                                 "/js/**",
-                                                "/home")
+                                                "/home",
+                                                "/register/**",
+                                                "/login")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated()
                 )
 
                 .oauth2Login(oauth -> oauth
-                        .loginPage("/login")
+                                .loginPage("/login")
 //                        .loginProcessingUrl("/login")
-                                .userInfoEndpoint(info -> info.userService(oAuth2UserService) )
-                         .defaultSuccessUrl("/home", true)
-                        .permitAll()
+                                .userInfoEndpoint(info -> info.userService(oAuth2UserService))
+                                .defaultSuccessUrl("/home", true)
+                                .permitAll()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")

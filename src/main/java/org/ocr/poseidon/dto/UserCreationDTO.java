@@ -29,7 +29,7 @@ public class UserCreationDTO {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRole role = UserRole.USER;
 
     public User convertToUser() {
         User user = new User();

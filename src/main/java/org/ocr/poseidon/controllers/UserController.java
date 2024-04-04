@@ -23,6 +23,35 @@ public class UserController {
     }
 
 
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        log.info("GET/register ");
+
+        UserCreationDTO userCreationDTO = new UserCreationDTO();
+        model.addAttribute("userCreationDTO", userCreationDTO);
+        return "registration/register";
+    }
+
+    @PostMapping("/register/save")
+    public String saveUser(@Valid @ModelAttribute("userCreationDTO") UserCreationDTO userCreationDTO, BindingResult result, Model model) {
+        log.info("POST:  /user/validate/");
+
+
+        if (result.hasErrors()) {
+            return "registration/register";
+        }
+
+        try {
+            userService.saveUser(userCreationDTO);
+        } catch (ValidationException e) {
+            model.addAttribute("usernameNotUnique", true);
+            return "registration/register";
+        }
+
+        return "redirect:/login?success";
+    }
+
+
     @GetMapping("/login")
     public String login() {
         log.info("GET/login");

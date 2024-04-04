@@ -5,22 +5,20 @@ import org.ocr.poseidon.domain.User;
 import org.ocr.poseidon.dto.UserCreationDTO;
 import org.ocr.poseidon.exceptions.ItemNotFoundException;
 import org.ocr.poseidon.repositories.UserRepository;
-import org.ocr.poseidon.util.PasswordEncrypt;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class UserServiceImpl extends AbstractCrudService<User> {
-
     private final UserRepository userRepository;
-    private final PasswordEncrypt passwordEncrypt;
+    private final PasswordEncoder passwordEncoder;
 
-    protected UserServiceImpl(JpaRepository<User, Integer> repository, UserRepository userRepository, PasswordEncrypt passwordEncrypt) {
+    protected UserServiceImpl(JpaRepository<User, Integer> repository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         super(repository);
-
         this.userRepository = userRepository;
-        this.passwordEncrypt = passwordEncrypt;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -34,7 +32,7 @@ public class UserServiceImpl extends AbstractCrudService<User> {
         user.setUsername(userCreationDTO.getUsername());
         user.setFullname(userCreationDTO.getFullname());
         user.setRole(String.valueOf(userCreationDTO.getRole()));
-        user.setPassword(passwordEncrypt.createPassword(userCreationDTO.getPassword()));
+        user.setPassword(passwordEncoder.encode(userCreationDTO.getPassword()));
         userRepository.save(user);
     }
 
@@ -53,7 +51,7 @@ public class UserServiceImpl extends AbstractCrudService<User> {
             throw new ValidationException("Username " + newUsername + " is already in use");
         }
 
-        user.setPassword(passwordEncrypt.createPassword(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return user;
     }

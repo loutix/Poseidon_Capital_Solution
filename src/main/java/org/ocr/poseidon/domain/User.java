@@ -28,7 +28,7 @@ public class User implements CrudEntity<User> {
     private String role;
 
     @Column(name = "is_sso", nullable = false)
-    private Boolean sso;
+    private Boolean sso = false;
 
     @Override
     public User update(User user) {
