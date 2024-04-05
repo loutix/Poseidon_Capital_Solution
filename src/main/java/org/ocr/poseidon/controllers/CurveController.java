@@ -45,7 +45,7 @@ public class CurveController {
     }
 
     @PostMapping("/curvePoint/validate")
-    public String validate(@Valid @ModelAttribute("curvePoint") CurverCreateRequestDTO curverCreateRequestDTO, BindingResult result) {
+    public String validate(@Valid @ModelAttribute("curvePoint") CurverCreateRequestDTO curverCreateRequestDTO, BindingResult result, Model model) {
 
         log.info("POST:  /curvePoint/validate");
 

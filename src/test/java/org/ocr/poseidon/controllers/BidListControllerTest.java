@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.ocr.poseidon.domain.BidList;
 import org.ocr.poseidon.dto.BidListCreateRequestDTO;
 import org.ocr.poseidon.dto.BidListUpdateRequestDTO;
+import org.ocr.poseidon.security.OAuth2UserService;
 import org.ocr.poseidon.security.SecurityConfig;
 import org.ocr.poseidon.services.BidListServiceImpl;
 import org.ocr.poseidon.util.AuthUtils;
@@ -31,6 +32,10 @@ class BidListControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+
+    @MockBean
+    private OAuth2UserService oAuth2UserService;
+
     @MockBean
     private BidListServiceImpl bidListService;
 
@@ -56,6 +61,28 @@ class BidListControllerTest {
                 .andExpect(model().attribute("bidLists", bidListList))
                 .andExpect(model().attributeExists("isAdmin"))
                 .andExpect(model().attribute("isAdmin", true));
+
+        //THEN
+        verify(bidListService, times(1)).getAll();
+        verify(authUtils, times(1)).isAdmin();
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("Get /bidList/list USER")
+    void homeUser() throws Exception {
+        //GIVEN
+        List<BidList> bidListList = new ArrayList<>(List.of(new BidList()));
+
+        //WHEN
+        when(authUtils.isAdmin()).thenReturn(false);
+        when(bidListService.getAll()).thenReturn(bidListList);
+
+        mockMvc.perform(get("/bidList/list"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("bidList/list"))
+                .andExpect(model().attributeExists("bidLists"))
+                .andExpect(model().attribute("bidLists", bidListList));
 
         //THEN
         verify(bidListService, times(1)).getAll();
@@ -104,30 +131,30 @@ class BidListControllerTest {
         verify(bidListService, times(1)).save(bidListConverted);
     }
 
-//    @Test
-//    @WithMockUser
-//    @DisplayName("POST /bidList/validate - Errors Present")
-//    void validateWithErrorsValidate() throws Exception {
-//        //GIVEN
-//        BidListCreateRequestDTO bidListCreateRequestDTO = new BidListCreateRequestDTO();
-//
-//        BidList bidListConverted = bidListCreateRequestDTO.convertToBidList();
-//
-//        //WHEN
-//        BindingResult bindingResult = mock(BindingResult.class);
-//        when(bindingResult.hasErrors()).thenReturn(true);
-//
-//
-//        mockMvc.perform(post("/bidList/validate")
-//                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//                        .param("account","testAccount")
-//                        .param("type", "testType")
-//                        .param("bidQuantity", "10.20"))
-//                .andExpect(status().is3xxRedirection());
-//
-//        //THEN
-//        verify(bindingResult, times(1)).hasErrors();
-//    }
+    @Test
+    @WithMockUser
+    @DisplayName("POST /bidList/validate - Errors Present")
+    void validateWithErrorsValidate() throws Exception {
+        //GIVEN
+        BidListCreateRequestDTO bidListCreateRequestDTO = new BidListCreateRequestDTO();
+        bidListCreateRequestDTO.setAccount("");
+        bidListCreateRequestDTO.setType("");
+        bidListCreateRequestDTO.setBidQuantity(10.0);
+
+
+        //WHEN
+        mockMvc.perform(post("/bidList/validate")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("account", bidListCreateRequestDTO.getAccount())
+                        .param("type", bidListCreateRequestDTO.getType())
+                        .param("bidQuantity", String.valueOf(bidListCreateRequestDTO.getBidQuantity())))
+                .andExpect(status().isOk())
+                .andExpect(view().name("bidList/add"));
+
+        //THEN
+        verify(bidListService, times(0)).save(new BidList());
+
+    }
 
 
     @Test
@@ -184,6 +211,33 @@ class BidListControllerTest {
         //THEN
         verify(bidListService, times(1)).update(bidListConverted);
     }
+
+    @Test
+    @WithMockUser
+    @DisplayName("POST /bidList/update/{id} error")
+    void updateBidError() throws Exception {
+        //GIVEN
+        int id = 1;
+        BidListUpdateRequestDTO bidListUpdateRequestDTO = new BidListUpdateRequestDTO();
+        bidListUpdateRequestDTO.setAccount("account");
+        bidListUpdateRequestDTO.setType("type");
+        bidListUpdateRequestDTO.setBidQuantity(10.20);
+        //bidListUpdateRequestDTO.setId(id);
+
+        //WHEN
+        mockMvc.perform(post("/bidList/update/{id}", id)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", String.valueOf(bidListUpdateRequestDTO.getId()))
+                        .param("account", bidListUpdateRequestDTO.getAccount())
+                        .param("type", bidListUpdateRequestDTO.getType())
+                        .param("bidQuantity", String.valueOf(bidListUpdateRequestDTO.getBidQuantity())))
+                .andExpect(status().isOk())
+                .andExpect(view().name("bidList/update"));
+
+        //THEN
+        verify(bidListService, times(0)).update(new BidList());
+    }
+
 
     @Test
     @WithMockUser
