@@ -20,18 +20,11 @@ public class HomeController {
     public String home(Model model) {
         log.info("Get  route: /");
 
-        model.addAttribute("isUserAnonymous", AuthUtils.isUserAnonymous());
+        model.addAttribute("isUserAnonymous", authUtils.isUserAnonymous());
 
         if (authUtils.isAdmin()) {
             model.addAttribute("isAdmin", true);
         }
         return "home";
     }
-
-    @RequestMapping("/admin/home")
-    public String adminHome() {
-        return "redirect:/bidList/list";
-    }
-
-
 }
