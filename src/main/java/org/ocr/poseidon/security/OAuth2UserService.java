@@ -43,9 +43,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         boolean existingUser = userRepository.findByUsername(username + id).stream().anyMatch(user -> user.getSso().equals(true));
 
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
         if (!existingUser) {
             User newUserSSO = new User();
             newUserSSO.setUsername(username_id);
@@ -55,6 +52,10 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
             userRepository.save(newUserSSO);
         }
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
         return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), "login");
     }
 }

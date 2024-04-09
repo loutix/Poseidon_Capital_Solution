@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,15 +94,22 @@ class BidListControllerTest {
     @WithMockUser
     @DisplayName("Get /bidList/add")
     void addBidForm() throws Exception {
-        //GIVEN
+        //GIVEN a user want to show the bidList page
+        final String url = "/bidList/add";
+        // AND an expected page tu show
+        final String expectedView = "bidList/add";
+        // And the expected object response
+        final BidListCreateRequestDTO expectedResponse = new BidListCreateRequestDTO();
 
-        //WHEN
-        mockMvc.perform(get("/bidList/add"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("bidList/add"))
+        //WHEN the user go to the bidList page
+        final ResultActions request = mockMvc.perform(get(url));
+
+        //THEN the page is found and respond
+        request.andExpect(status().isOk())
+                .andExpect(view().name(expectedView))
                 .andExpect(model().attributeExists("bidListCreateRequestDto"))
-                .andExpect(model().attribute("bidListCreateRequestDto", new BidListCreateRequestDTO()));
-        //THEN
+                .andExpect(model().attribute("bidListCreateRequestDto", expectedResponse));
+
     }
 
     @Test
