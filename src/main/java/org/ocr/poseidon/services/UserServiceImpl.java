@@ -42,10 +42,10 @@ public class UserServiceImpl extends AbstractCrudService<User> {
         Integer id = user.getId();
 
         if (!repository.existsById(id)) {
-            throw new ItemNotFoundException("User with ID " + id + " not found");
+            throw new ItemNotFoundException("User with ID " + id + " not found 123");
         }
 
-        User userUpdated = userRepository.findById(id).orElseThrow();
+        User userUpdated = userRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("User with ID " + id + " not found 2"));
         String newUsername = user.getUsername();
         if (!userUpdated.getUsername().equalsIgnoreCase(newUsername) && userRepository.existsByUsername(user.getUsername())) {
             throw new ValidationException("Username " + newUsername + " is already in use");

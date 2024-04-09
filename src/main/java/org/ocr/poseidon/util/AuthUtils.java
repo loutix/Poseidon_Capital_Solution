@@ -25,7 +25,7 @@ public class AuthUtils {
             Object principal = authentication.getPrincipal();
             return principal instanceof String && principal.equals("anonymousUser");
         }
-        return true;
+        return false;
     }
 
 }
