@@ -45,7 +45,7 @@ public class CurveController {
     }
 
     @PostMapping("/curvePoint/validate")
-    public String validate(@Valid @ModelAttribute("curvePoint") CurverCreateRequestDTO curverCreateRequestDTO, BindingResult result, Model model) {
+    public String validate(@Valid @ModelAttribute("curvePoint") CurverCreateRequestDTO curverCreateRequestDTO, BindingResult result) {
 
         log.info("POST:  /curvePoint/validate");
 
@@ -62,7 +62,7 @@ public class CurveController {
     @GetMapping("/curvePoint/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 
-        log.info("GET:  /curvePoint/update/" + id);
+        log.info("GET:  /curvePoint/update/{}", id);
 
         CurvePoint curvePoint = curvePointService.getById(id);
 
@@ -77,7 +77,7 @@ public class CurveController {
     public String updateBid(@PathVariable("id") Integer id, @Valid @ModelAttribute("curvePoint") CurverUpdateRequestDTO curverUpdateRequestDTO,
                             BindingResult result, Model model) {
 
-        log.info("POST:  /curvePoint/update/" + id);
+        log.info("POST:  /curvePoint/update/{}", id);
 
         if (result.hasErrors()) {
             model.addAttribute("id", id);
@@ -93,7 +93,7 @@ public class CurveController {
 
     @GetMapping("/curvePoint/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id) {
-        log.info("DELETE:  /curvePoint/delete" + id);
+        log.info("DELETE:  /curvePoint/delete{}", id);
 
         curvePointService.delete(id);
 

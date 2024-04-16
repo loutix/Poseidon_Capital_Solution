@@ -21,11 +21,16 @@ public class UserServiceImpl extends AbstractCrudService<User> {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * This method save a new user
+     *
+     * @param userCreationDTO DTO object to new user
+     */
 
     public void saveUser(UserCreationDTO userCreationDTO) {
 
         if (userRepository.existsByUsername(userCreationDTO.getUsername())) {
-            throw new ValidationException("There is already an account registered with the same unsername" + userCreationDTO.getUsername());
+            throw new ValidationException("There is already an account registered with the same username" + userCreationDTO.getUsername());
         }
 
         User user = new User();
@@ -36,16 +41,21 @@ public class UserServiceImpl extends AbstractCrudService<User> {
         userRepository.save(user);
     }
 
-
+    /**
+     * This method checks errors before updated a new user
+     *
+     * @param user user updated from form
+     * @return user updated from form checked
+     */
     public User controlUser(User user) {
 
         Integer id = user.getId();
 
         if (!repository.existsById(id)) {
-            throw new ItemNotFoundException("User with ID " + id + " not found 123");
+            throw new ItemNotFoundException("User with ID " + id + " is not found");
         }
 
-        User userUpdated = userRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("User with ID " + id + " not found 2"));
+        User userUpdated = userRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("User with ID " + id + " is not found"));
         String newUsername = user.getUsername();
         if (!userUpdated.getUsername().equalsIgnoreCase(newUsername) && userRepository.existsByUsername(user.getUsername())) {
             throw new ValidationException("Username " + newUsername + " is already in use");

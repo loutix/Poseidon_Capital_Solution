@@ -16,6 +16,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Custom implementation of OAuth2UserService to handle OAuth2 user authentication.
+ * Extends DefaultOAuth2UserService provided by Spring Security.
+ */
 @Slf4j
 @Service
 public class OAuth2UserService extends DefaultOAuth2UserService {
@@ -26,6 +31,15 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * This method load user information from the OAuth2 provider.
+     *
+     * @param oAuth2UserRequest The OAuth2 user request.
+     * @return OAuth2User containing user information.
+     * @throws OAuth2AuthenticationException If an error occurs during authentication.
+     */
+
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
 
@@ -33,6 +47,13 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         return processOAuth2User(oAuth2User);
 
     }
+
+    /**
+     * Processes the OAuth2 user information obtained from the provider.
+     *
+     * @param oAuth2User The OAuth2 user information.
+     * @return DefaultOAuth2User containing processed user details.
+     */
 
     private DefaultOAuth2User processOAuth2User(OAuth2User oAuth2User) {
 

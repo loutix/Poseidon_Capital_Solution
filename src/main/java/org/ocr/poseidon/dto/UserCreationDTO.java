@@ -13,7 +13,7 @@ import org.ocr.poseidon.enums.UserRole;
 public class UserCreationDTO {
 
     @NotBlank(message = "The username is mandatory")
-    @Size(min = 5, max = 15, message = "Lastname name must be between 5 and 15 characters")
+    @Size(min = 2, max = 15, message = "Lastname name must be between 5 and 15 characters")
     private String username;
 
     @NotBlank
@@ -22,8 +22,8 @@ public class UserCreationDTO {
     )
     private String password;
 
-    @NotBlank(message = "The fullname is mandatory")
-    @Size(min = 5, max = 15, message = "Lastname name must be between 5 and 15 characters")
+    @NotBlank(message = "The full name is mandatory")
+    @Size(min = 2, max = 15, message = "Lastname name must be between 5 and 15 characters")
     private String fullname;
 
     @NotNull

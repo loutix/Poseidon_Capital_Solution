@@ -34,8 +34,7 @@ public class UserController {
 
     @PostMapping("/register/save")
     public String saveUser(@Valid @ModelAttribute("userCreationDTO") UserCreationDTO userCreationDTO, BindingResult result, Model model) {
-        log.info("POST:  /user/validate/");
-
+        log.info("POST:  /user/save");
 
         if (result.hasErrors()) {
             return "registration/register";
@@ -93,7 +92,7 @@ public class UserController {
 
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        log.info("GET:  /user/update/" + id);
+        log.info("GET:  /user/update/{}", id);
 
         User user = userService.getById(id);
 

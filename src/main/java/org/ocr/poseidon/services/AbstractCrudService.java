@@ -16,17 +16,36 @@ public abstract class AbstractCrudService<E extends CrudEntity<E>> implements Cr
         this.repository = repository;
     }
 
+    /**
+     * This method is an abstraction to getById entity
+     *
+     * @param id the entity id to delete
+     * @return the entity get
+     */
 
     @Override
     public E getById(Integer id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ItemNotFoundException("Item id n°" + id + "is not found"));
+                .orElseThrow(() -> new ItemNotFoundException("Item id n°" + id + " is not found"));
     }
 
+    /**
+     * This method is an abstraction to getAll  entities
+     *
+     * @return a list of Entities
+     */
     @Override
     public List<E> getAll() {
         return repository.findAll();
     }
+
+
+    /**
+     * This method is an abstraction to save an entity
+     *
+     * @param entity entity to save
+     * @return entity saved
+     */
 
     @Override
     public E save(E entity) {
@@ -37,6 +56,11 @@ public abstract class AbstractCrudService<E extends CrudEntity<E>> implements Cr
     }
 
 
+    /**
+     * This method is an abstraction to delete an entity
+     *
+     * @param id the entity id to delete
+     */
     @Override
     public void delete(Integer id) {
 
@@ -44,7 +68,7 @@ public abstract class AbstractCrudService<E extends CrudEntity<E>> implements Cr
         if (resultOptional.isPresent()) {
             repository.deleteById(id);
         } else {
-            throw new ItemNotFoundException("Item id n°" + id + "is not found");
+            throw new ItemNotFoundException("Item id n°" + id + " is not found");
         }
     }
 
@@ -53,8 +77,6 @@ public abstract class AbstractCrudService<E extends CrudEntity<E>> implements Cr
      * This method is an abstraction to update an entity
      *
      * @param entity the entity to update
-     * @author moi
-     * @since v1.25
      */
     @Override
     public void update(E entity) {

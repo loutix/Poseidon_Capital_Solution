@@ -79,7 +79,7 @@ public class BidListController {
     public String updateBid(@PathVariable("id") Integer id, @Valid @ModelAttribute("bidList") BidListUpdateRequestDTO bidListUpdateRequestDTO,
                             BindingResult result, Model model) {
 
-        log.info("POST:  /bidList/update/" + id);
+        log.info("POST:  /bidList/update/{}", id);
 
         if (result.hasErrors()) {
             model.addAttribute("id", id);

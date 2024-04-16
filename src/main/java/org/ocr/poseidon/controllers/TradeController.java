@@ -60,7 +60,7 @@ public class TradeController {
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 
-        log.info("GET:  /trade/update/" + id);
+        log.info("GET:  /trade/update/{}", id);
 
         Trade trade = tradeService.getById(id);
 

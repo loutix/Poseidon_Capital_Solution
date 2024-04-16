@@ -86,7 +86,7 @@ public class RuleNameController {
 
     @GetMapping("/ruleName/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id) {
-        log.info("GET:  /ruleName/delete/{id}" + id);
+        log.info("GET:  /ruleName/delete/{}", id);
 
         ruleService.delete(id);
 
