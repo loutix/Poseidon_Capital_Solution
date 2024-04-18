@@ -46,12 +46,11 @@ public class BidListController {
     }
 
     @PostMapping("/bidList/validate")
-    public String validate(@Valid @ModelAttribute("bidListRequestDto") BidListCreateRequestDTO bidListCreateRequestDto, BindingResult result, Model model) {
+    public String validate(@Valid @ModelAttribute("bidListCreateRequestDto") BidListCreateRequestDTO bidListCreateRequestDto, BindingResult result) {
 
         log.info("POST:  /bidList/validate");
 
         if (result.hasErrors()) {
-            model.addAttribute("bidListCreateRequestDto", new BidListCreateRequestDTO());
             return "bidList/add";
         }
 
