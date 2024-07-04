@@ -12,7 +12,7 @@ CREATE TABLE BidList
     bid_list_id    tinyint(4)  NOT NULL AUTO_INCREMENT,
     account        VARCHAR(30) NOT NULL,
     type           VARCHAR(30) NOT NULL,
-    bid_quantity   DOUBLE,
+    bid_quantity   DOUBLE NOT NULL,
     ask_quantity   DOUBLE,
     bid            DOUBLE,
     ask            DOUBLE,
@@ -40,7 +40,7 @@ CREATE TABLE Trade
     trade_id       tinyint(4)  NOT NULL AUTO_INCREMENT,
     account        VARCHAR(30) NOT NULL,
     type           VARCHAR(30) NOT NULL,
-    buy_quantity   DOUBLE,
+    buy_quantity   DOUBLE NOT NULL,
     sell_quantity  DOUBLE,
     buy_price      DOUBLE,
     sell_price     DOUBLE,
@@ -67,8 +67,8 @@ CREATE TABLE CurvePoint
     id            tinyint(4) NOT NULL AUTO_INCREMENT,
     curve_id      tinyint,
     as_of_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    term          DOUBLE,
-    value         DOUBLE,
+    term          DOUBLE NOT NULL,
+    value         DOUBLE NOT NULL,
     creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (id)
@@ -77,10 +77,10 @@ CREATE TABLE CurvePoint
 CREATE TABLE Rating
 (
     Id            tinyint(4) NOT NULL AUTO_INCREMENT,
-    moodys_rating VARCHAR(125),
-    sand_p_rating VARCHAR(125),
-    fitch_rating  VARCHAR(125),
-    order_number  tinyint,
+    moodys_rating VARCHAR(125) NOT NULL,
+    sand_p_rating VARCHAR(125) NOT NULL,
+    fitch_rating  VARCHAR(125) NOT NULL,
+    order_number  tinyint NOT NULL,
 
     PRIMARY KEY (Id)
 );
@@ -88,12 +88,12 @@ CREATE TABLE Rating
 CREATE TABLE RuleName
 (
     Id          tinyint(4) NOT NULL AUTO_INCREMENT,
-    name        VARCHAR(125),
-    description VARCHAR(125),
-    json        VARCHAR(125),
-    template    VARCHAR(512),
-    sql_str     VARCHAR(125),
-    sql_part    VARCHAR(125),
+    name        VARCHAR(125) NOT NULL,
+    description VARCHAR(125) NOT NULL,
+    json        VARCHAR(125) NOT NULL,
+    template    VARCHAR(512) NOT NULL,
+    sql_str     VARCHAR(125) NOT NULL,
+    sql_part    VARCHAR(125) NOT NULL,
 
     PRIMARY KEY (Id)
 );
@@ -101,10 +101,10 @@ CREATE TABLE RuleName
 CREATE TABLE Users
 (
     Id       tinyint(4) NOT NULL AUTO_INCREMENT,
-    username VARCHAR(125),
+    username VARCHAR(125) NOT NULL UNIQUE,
     password VARCHAR(125),
-    fullname VARCHAR(125),
-    role     VARCHAR(125),
+    fullname VARCHAR(125) NOT NULL,
+    role     VARCHAR(125) NOT NULL,
     is_sso   boolean DEFAULT 0,
 
     PRIMARY KEY (Id)
