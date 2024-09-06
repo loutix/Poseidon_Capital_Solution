@@ -19,7 +19,7 @@ public class UserUpdateDTO {
     @Size(min = 2, max = 15, message = "Lastname name must be between 5 and 15 characters")
     private String username;
 
-    @NotBlank
+
     @Pattern(message = "Le mot de passe au moins une lettre majuscule, au moins 8 caractères, au moins un chiffre et un symbole ex: }a5p5i5Q-N",
             regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&(){}:;',?/*~$^+=<>]).{8,20}$"
     )

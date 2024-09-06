@@ -116,9 +116,6 @@
 						</goals>
 						<configuration>
 							<excludes>
-								<!--                                <exclude>com/ocrooms/safetynet/service/exceptions/ApiExceptionHandler**</exclude>-->
-								<!--                                <exclude>com/ocrooms/safetynet/SafetyNetApplication**</exclude>-->
-								<!--                                <exclude>**/*_.java</exclude>-->
 							</excludes>
 						</configuration>
 					</execution>

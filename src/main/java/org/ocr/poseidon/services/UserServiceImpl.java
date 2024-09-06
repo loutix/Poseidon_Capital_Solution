@@ -61,8 +61,11 @@ public class UserServiceImpl extends AbstractCrudService<User> {
             throw new ValidationException("Username " + newUsername + " is already in use");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            user.setPassword(userUpdated.getPassword());
+        }
         return user;
     }
 }
